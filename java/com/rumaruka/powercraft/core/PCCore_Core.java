@@ -3,7 +3,6 @@ package com.rumaruka.powercraft.core;
 import com.rumaruka.powercraft.api.PCApi;
 import com.rumaruka.powercraft.api.PCBuild;
 import com.rumaruka.powercraft.api.PCModule;
-import com.rumaruka.powercraft.api.network.PCPacketHandler;
 import com.rumaruka.powercraft.core.item.PCItemOreSniffer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Mod;

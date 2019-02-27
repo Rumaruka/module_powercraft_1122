@@ -1,12 +1,18 @@
 package com.rumaruka.powercraft.core.item;
 
+import com.rumaruka.powercraft.api.PCField.Flag;
 import com.rumaruka.powercraft.api.PCLangHelper;
+import com.rumaruka.powercraft.api.PCVec4I;
+import com.rumaruka.powercraft.api.gres.IGresGui;
 import com.rumaruka.powercraft.api.gres.IGresGuiOpenHandler;
+import com.rumaruka.powercraft.api.gres.PCGres;
+import com.rumaruka.powercraft.api.gres.PCGresBaseWithInventory;
 import com.rumaruka.powercraft.api.item.PCItem;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
@@ -33,7 +39,13 @@ public class PCItemOreSniffer extends PCItem implements IGresGuiOpenHandler {
 
     @Override
     public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        return super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
+        ItemStack itemStack = player.getHeldItem(hand);
+        if(!worldIn.isRemote){
+            PCGres.openGui(player,this,new PCVec4I(pos.getX(),pos.getY(),pos.getZ(),facing.getIndex()));
+        }
+        itemStack.damageItem(1,player);
+        return EnumActionResult.SUCCESS;
+
     }
 
     @Override
@@ -47,4 +59,20 @@ public class PCItemOreSniffer extends PCItem implements IGresGuiOpenHandler {
     }
 
 
+    @Override
+    public IGresGui openClientGui(EntityPlayer player, NBTTagCompound serverData) {
+        return null;
+    }
+
+    @Override
+    public PCGresBaseWithInventory openServerGui(EntityPlayer player, Object[] params) {
+        return null;
+    }
+
+    @Override
+    public NBTTagCompound sendOnGuiOpenToClient(EntityPlayer player, Object[] params) {
+        NBTTagCompound nbtTagCompound = new NBTTagCompound();
+        ((PCVec4I)params[0]).saveToNBT(nbtTagCompound, Flag.SYNC);
+        return nbtTagCompound;
+    }
 }
